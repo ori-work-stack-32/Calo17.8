@@ -220,7 +220,7 @@ const ToolBar: React.FC<ToolBarProps> = ({ helpContent }) => {
     []
   );
 
-  // Dynamic positioning based on language - FIXED positioning
+  // Dynamic positioning based on language
   const toolbarPosition = useMemo(
     () => ({
       bottom: insets.bottom + 100, // Position above tab bar
@@ -229,12 +229,11 @@ const ToolBar: React.FC<ToolBarProps> = ({ helpContent }) => {
     [insets.bottom, isRTL]
   );
 
-  // FIXED: Panel positioning - should be opposite to toolbar position
+  // Panel positioning
   const panelPosition = useMemo(
     () => ({
       top: 50,
-      // If toolbar is on right, panel should be on left and vice versa
-      [isRTL ? "right" : "left"]: 0,
+      [isRTL ? "left" : "right"]: 20,
       width: Math.min(320, screenWidth - 40),
     }),
     [isRTL]
@@ -384,7 +383,17 @@ const ToolBar: React.FC<ToolBarProps> = ({ helpContent }) => {
           />
 
           <Animated.View
-            style={[styles.modalContent, modalStyle, panelPosition]}
+            style={[
+              styles.modalContent,
+              modalStyle,
+              {
+                position: 'absolute',
+                top: 50,
+                [isRTL ? 'left' : 'right']: 20,
+                width: Math.min(320, screenWidth - 40),
+                maxHeight: '70%',
+              }
+            ]}
           >
             <LinearGradient
               colors={
@@ -433,15 +442,38 @@ const ToolBar: React.FC<ToolBarProps> = ({ helpContent }) => {
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={styles.modalBodyContent}
               >
-                <Text
-                  style={[
-                    styles.modalText,
-                    { color: colors.text },
-                    isRTL && styles.rtlText,
-                  ]}
-                >
-                  {helpContent?.description || "No help content available."}
-                </Text>
+                {helpContent ? (
+                  <View>
+                    <Text
+                      style={[
+                        styles.modalText,
+                        { color: colors.text },
+                        isRTL && styles.rtlText,
+                      ]}
+                    >
+                      {helpContent.description}
+                    </Text>
+                    
+                    {/* Additional help sections */}
+                    <View style={styles.helpSection}>
+                      <Text style={[styles.helpSectionTitle, { color: colors.text }]}>
+                        Quick Tips:
+                      </Text>
+                      <Text style={[styles.helpSectionText, { color: colors.text }]}>
+                        • Use the camera to scan meals for nutrition analysis
+                        • Track your water intake daily for better health
+                        • Complete your questionnaire for personalized recommendations
+                        • Check your statistics to monitor progress
+                      </Text>
+                    </View>
+                  </View>
+                ) : (
+                  <View style={styles.noHelpContent}>
+                    <Text style={[styles.modalText, { color: colors.text }]}>
+                      Help content is loading...
+                    </Text>
+                  </View>
+                )}
               </ScrollView>
             </LinearGradient>
           </Animated.View>
@@ -540,9 +572,7 @@ const styles = StyleSheet.create({
     padding: 24,
   },
   modalContent: {
-    position: "absolute",
     maxWidth: 420,
-    maxHeight: "80%",
     borderRadius: 24,
     overflow: "hidden",
     shadowColor: "#000",
@@ -604,6 +634,26 @@ const styles = StyleSheet.create({
   rtlText: {
     textAlign: "right",
     writingDirection: "rtl",
+  },
+  helpSection: {
+    marginTop: 20,
+    paddingTop: 20,
+    borderTopWidth: 1,
+    borderTopColor: "rgba(255, 255, 255, 0.1)",
+  },
+  helpSectionTitle: {
+    fontSize: 16,
+    fontWeight: "600",
+    marginBottom: 12,
+  },
+  helpSectionText: {
+    fontSize: 14,
+    lineHeight: 22,
+    opacity: 0.9,
+  },
+  noHelpContent: {
+    padding: 20,
+    alignItems: "center",
   },
 });
 

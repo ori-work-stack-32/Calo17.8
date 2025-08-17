@@ -231,7 +231,7 @@ export default function ProfileScreen() {
     try {
       setIsUploadingAvatar(true);
 
-      const response = await userAPI.uploadAvatar(base64);
+      const response = await authAPI.uploadAvatar(base64);
 
       if (response.success) {
         // Update user in Redux store
@@ -525,7 +525,7 @@ export default function ProfileScreen() {
               onPress={handleAvatarPress}
               disabled={isUploadingAvatar}
             >
-              {user?.avatar_url ? (
+              {user?.avatar_url && user.avatar_url.trim() !== "" ? (
                 <Image
                   source={{ uri: user.avatar_url }}
                   style={styles.avatarImage}

@@ -92,6 +92,7 @@ router.post("/avatar", authenticateToken, async (req: AuthRequest, res) => {
         email: true,
         name: true,
         avatar_url: true,
+        avatar_url: true,
         subscription_type: true,
         birth_date: true,
         ai_requests_count: true,

@@ -30,6 +30,7 @@ import {
 import { useTheme } from "@/src/context/ThemeContext";
 import { useLanguage } from "@/src/i18n/context/LanguageContext";
 import { useTranslation } from "react-i18next";
+import { chatAPI } from "@/src/services/api";
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
@@ -184,53 +185,48 @@ export default function ChatInterface({ children }: ChatInterfaceProps) {
       scrollViewRef.current?.scrollToEnd({ animated: true });
     }, 100);
 
-    // Enhanced AI responses with RTL support
-    setTimeout(() => {
-      const responses = [
-        {
-          text: isRTL
-            ? "זה נשמע מעולה! בהתבסס על מה שאמרת, אני ממליץ על סלט קינואה עם ירקות צבעוניים וחלבון לבחירתך. זה מזין, טעים ומתאים לדיאטה בריאה."
-            : "That sounds great! Based on what you said, I recommend a quinoa salad with colorful vegetables and your choice of protein. It's nutritious, delicious and suitable for a healthy diet.",
+    // Send message to AI chat API
+    try {
+      const response = await chatAPI.sendMessage(
+        text.trim(),
+        isRTL ? "hebrew" : "english"
+      );
+
+      if (response.success && response.response) {
+        const botMessage: Message = {
+          id: (Date.now() + 1).toString(),
+          text: response.response.response || response.response,
+          isUser: false,
+          timestamp: new Date(),
           suggestions: isRTL
             ? ["איך מכינים קינואה?", "אפשרויות חלבון", "עוד רעיונות לסלטים"]
             : ["How to prepare quinoa?", "Protein options", "More salad ideas"],
-        },
-        {
-          text: isRTL
-            ? "לארוחת בוקר אני ממליץ על שייק חלבון עם בננה, שיבולת שועל ושקדים. זה נותן אנרגיה לכל הבוקר ומכיל חלבון איכותי."
-            : "For breakfast I recommend a protein shake with banana, oats and almonds. It provides energy for the whole morning and contains quality protein.",
-          suggestions: isRTL
-            ? ["מתכון לשייק", "חלופות לבננה", "עוד רעיונות לבוקר"]
-            : ["Shake recipe", "Banana alternatives", "More breakfast ideas"],
-        },
-        {
-          text: isRTL
-            ? "עבור ארוחה מהירה, אני מציע טוסט אבוקדו עם ביצה, או סלט טונה מהיר. שתי האפשרויות לוקחות פחות מ-10 דקות להכנה."
-            : "For a quick meal, I suggest avocado toast with egg, or a quick tuna salad. Both options take less than 10 minutes to prepare.",
-          suggestions: isRTL
-            ? ["מתכון טוסט אבוקדו", "רעיונות לסלט טונה", "עוד ארוחות מהירות"]
-            : ["Avocado toast recipe", "Tuna salad ideas", "More quick meals"],
-        },
-      ];
+        };
 
-      const randomResponse =
-        responses[Math.floor(Math.random() * responses.length)];
-
+        setMessages((prev) => [...prev, botMessage]);
+      } else {
+        throw new Error("Invalid response from AI");
+      }
+    } catch (error) {
+      console.error("💥 Chat API error:", error);
+      
+      // Fallback response
       const botMessage: Message = {
         id: (Date.now() + 1).toString(),
-        text: randomResponse.text,
+        text: isRTL
+          ? "מצטער, אירעה שגיאה. אנא נסה שוב."
+          : "Sorry, there was an error. Please try again.",
         isUser: false,
         timestamp: new Date(),
-        suggestions: randomResponse.suggestions,
       };
 
       setMessages((prev) => [...prev, botMessage]);
+    } finally {
       setIsTyping(false);
-
       setTimeout(() => {
         scrollViewRef.current?.scrollToEnd({ animated: true });
       }, 100);
-    }, 2000);
+    }
   };
 
   const handleSuggestionPress = (suggestion: string) => {

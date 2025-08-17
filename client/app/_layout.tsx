@@ -174,69 +174,79 @@ function useHelpContent(): { title: string; description: string } | undefined {
 
   return useMemo(() => {
     const route = "/" + segments.join("/");
+    
+    // Ensure we have valid translations
+    const safeT = (key: string, fallback: string = key) => {
+      try {
+        const translation = t(key);
+        return translation && translation !== key ? translation : fallback;
+      } catch {
+        return fallback;
+      }
+    };
 
     const helpContentMap: Record<
       string,
       { title: string; description: string }
     > = {
       "/questionnaire": {
-        title: t("questionnaire.title"),
-        description: t("tabs.questionnaire_description"),
+        title: safeT("questionnaire.title", "Health Questionnaire"),
+        description: safeT("tabs.questionnaire_description", "Complete your health profile to receive personalized nutrition recommendations. This questionnaire helps us understand your goals, lifestyle, and dietary needs."),
       },
       "/(tabs)": {
-        title: t("tabs.home"),
-        description: t("tabs.home_description"),
+        title: safeT("tabs.home", "Home"),
+        description: safeT("tabs.home_description", "Welcome to your nutrition dashboard! Here you can view your daily progress, recent meals, and quick access to all features."),
       },
       "/(tabs)/index": {
-        title: t("tabs.home"),
-        description: t("tabs.home_description"),
+        title: safeT("tabs.home", "Home"),
+        description: safeT("tabs.home_description", "Welcome to your nutrition dashboard! Here you can view your daily progress, recent meals, and quick access to all features."),
       },
       "/(tabs)/calendar": {
-        title: t("tabs.calendar"),
-        description: t("tabs.calendar_description"),
+        title: safeT("tabs.calendar", "Calendar"),
+        description: safeT("tabs.calendar_description", "Plan your meals for the week ahead. View scheduled meals, track your nutrition goals, and see your eating patterns over time."),
       },
       "/(tabs)/statistics": {
-        title: t("tabs.statistics"),
-        description: t("tabs.statistics_description"),
+        title: safeT("tabs.statistics", "Statistics"),
+        description: safeT("tabs.statistics_description", "Track your nutritional progress with detailed charts and metrics. Monitor your intake and view trends."),
       },
       "/(tabs)/camera": {
-        title: t("tabs.camera"),
-        description: t("tabs.camera_description"),
+        title: safeT("tabs.camera", "Camera"),
+        description: safeT("tabs.camera_description", "Take photos of your meals to automatically log nutrition information. The AI will analyze your food and provide detailed nutritional breakdown."),
       },
       "/(tabs)/food-scanner": {
-        title: t("tabs.food_scanner"),
-        description: t("tabs.food_scanner_description"),
+        title: safeT("tabs.food_scanner", "Food Scanner"),
+        description: safeT("tabs.food_scanner_description", "Scan barcodes or upload food images to get instant nutrition information. Perfect for packaged foods and restaurant meals."),
       },
       "/(tabs)/ai-chat": {
-        title: t("tabs.ai_chat"),
-        description: t("tabs.ai_chat_description"),
+        title: safeT("tabs.ai_chat", "AI Chat"),
+        description: safeT("tabs.ai_chat_description", "Chat with your personal AI nutrition assistant. Ask questions about food, get meal recommendations, and receive personalized advice."),
       },
       "/(tabs)/recommended-menus": {
-        title: t("tabs.recommended_menus"),
-        description: t("tabs.recommended_menus_description"),
+        title: safeT("tabs.recommended_menus", "Recommended Menus"),
+        description: safeT("tabs.recommended_menus_description", "Discover personalized meal plans created just for you. Based on your dietary preferences, goals, and restrictions."),
       },
       "/(tabs)/history": {
-        title: t("tabs.history"),
-        description: t("tabs.history_description"),
+        title: safeT("tabs.history", "History"),
+        description: safeT("tabs.history_description", "Review your past meals and track your eating patterns. Rate your meals, add notes, and learn from your nutrition journey."),
       },
       "/(tabs)/profile": {
-        title: t("tabs.profile"),
-        description: t("tabs.profile_description"),
+        title: safeT("tabs.profile", "Profile"),
+        description: safeT("tabs.profile_description", "Manage your personal information, dietary preferences, and app settings. Update your goals and notification preferences."),
       },
       "/(tabs)/devices": {
-        title: t("tabs.devices"),
-        description: t("tabs.devices_description"),
+        title: safeT("tabs.devices", "Devices"),
+        description: safeT("tabs.devices_description", "Connect your fitness trackers and health apps to get a complete picture of your wellness. Sync data from various devices."),
       },
       "/(tabs)/questionnaire": {
-        title: t("questionnaire.title"),
-        description: t("tabs.questionnaire_description"),
+        title: safeT("questionnaire.title", "Health Questionnaire"),
+        description: safeT("tabs.questionnaire_description", "Complete your health profile to receive personalized nutrition recommendations."),
       },
     };
 
     return (
       helpContentMap[route] || {
-        title: t("common.help"),
-        description: t("tabs.home_description"),
+        title: safeT("common.help", "Help"),
+        description: safeT("tabs.home_description", "Welcome to your nutrition tracking app! Use the features to monitor your health and nutrition goals."),
       }
     );
   }, [segments, t]);
