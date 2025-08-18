@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useMemo } from "react";
 import {
   View,
-  Text,
+  Text,a
   TouchableOpacity,
   Modal,
   StyleSheet,
