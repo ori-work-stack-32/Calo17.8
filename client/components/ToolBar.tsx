@@ -387,11 +387,9 @@ const ToolBar: React.FC<ToolBarProps> = ({ helpContent }) => {
               styles.modalContent,
               modalStyle,
               {
-                position: 'absolute',
-                top: 50,
-                [isRTL ? 'left' : 'right']: 20,
-                width: Math.min(320, screenWidth - 40),
-                maxHeight: '70%',
+                maxWidth: 380,
+                width: '90%',
+                maxHeight: '80%',
               }
             ]}
           >

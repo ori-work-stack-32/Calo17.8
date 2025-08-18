@@ -287,9 +287,56 @@ const AppContent = React.memo(() => {
 });
 
 const MainApp = React.memo(() => {
-  const helpContent = useHelpContent();
+  const segments = useSegments();
+  const { t } = useTranslation();
   const authState = useOptimizedAuthSelector();
   const { isAuthenticated = false } = authState || {};
+
+  // Generate help content based on current route
+  const helpContent = useMemo(() => {
+    const route = "/" + segments.join("/");
+    
+    const safeT = (key: string, fallback: string = key) => {
+      try {
+        const translation = t(key);
+        return translation && translation !== key ? translation : fallback;
+      } catch {
+        return fallback;
+      }
+    };
+
+    const helpContentMap: Record<string, { title: string; description: string }> = {
+      "/(tabs)": {
+        title: safeT("tabs.home", "Home"),
+        description: safeT("tabs.home_description", "Welcome to your nutrition dashboard! Here you can view your daily progress, recent meals, and quick access to all features."),
+      },
+      "/(tabs)/calendar": {
+        title: safeT("tabs.calendar", "Calendar"),
+        description: safeT("tabs.calendar_description", "Plan your meals for the week ahead. View scheduled meals, track your nutrition goals, and see your eating patterns over time."),
+      },
+      "/(tabs)/statistics": {
+        title: safeT("tabs.statistics", "Statistics"),
+        description: safeT("tabs.statistics_description", "Track your nutritional progress with detailed charts and metrics. Monitor your intake and view trends."),
+      },
+      "/(tabs)/camera": {
+        title: safeT("tabs.camera", "Camera"),
+        description: safeT("tabs.camera_description", "Take photos of your meals to automatically log nutrition information. The AI will analyze your food and provide detailed nutritional breakdown."),
+      },
+      "/(tabs)/ai-chat": {
+        title: safeT("tabs.ai_chat", "AI Chat"),
+        description: safeT("tabs.ai_chat_description", "Chat with your personal AI nutrition assistant. Ask questions about food, get meal recommendations, and receive personalized advice."),
+      },
+      "/(tabs)/profile": {
+        title: safeT("tabs.profile", "Profile"),
+        description: safeT("tabs.profile_description", "Manage your personal information, dietary preferences, and app settings. Update your goals and notification preferences."),
+      },
+    };
+
+    return helpContentMap[route] || {
+      title: safeT("common.help", "Help"),
+      description: safeT("tabs.home_description", "Welcome to your nutrition tracking app! Use the features to monitor your health and nutrition goals."),
+    };
+  }, [segments, t]);
 
   return (
     <View style={styles.container}>

@@ -231,7 +231,7 @@ export default function ProfileScreen() {
     try {
       setIsUploadingAvatar(true);
 
-      const response = await authAPI.uploadAvatar(base64);
+      const response = await userAPI.uploadAvatar(`data:image/jpeg;base64,${base64}`);
 
       if (response.success) {
         // Update user in Redux store

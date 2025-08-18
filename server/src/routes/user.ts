@@ -25,10 +25,14 @@ router.put(
           user_id: true,
           email: true,
           name: true,
+          avatar_url: true,
           subscription_type: true,
           birth_date: true,
           ai_requests_count: true,
+          ai_requests_reset_at: true,
           created_at: true,
+          email_verified: true,
+          is_questionnaire_completed: true,
         },
       });
 
@@ -243,10 +247,14 @@ router.patch(
           user_id: true,
           email: true,
           name: true,
+          avatar_url: true,
           subscription_type: true,
           birth_date: true,
           ai_requests_count: true,
+          ai_requests_reset_at: true,
           created_at: true,
+          email_verified: true,
+          is_questionnaire_completed: true,
         },
       });
 
@@ -375,11 +383,14 @@ router.get(
           user_id: true,
           email: true,
           name: true,
+          avatar_url: true,
           subscription_type: true,
           birth_date: true,
           ai_requests_count: true,
           ai_requests_reset_at: true,
           created_at: true,
+          email_verified: true,
+          is_questionnaire_completed: true,
         },
       });
 

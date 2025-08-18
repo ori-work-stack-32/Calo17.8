@@ -529,9 +529,6 @@ export default function AIChatScreen({ onClose, onMinimize }: AIChatScreenProps 
               <Minus size={20} color="#6B7280" />
             </TouchableOpacity>
           )}
-          <TouchableOpacity style={styles.headerButton} onPress={clearChat}>
-            <Trash2 size={20} color="#E74C3C" />
-          </TouchableOpacity>
           {onClose && (
             <TouchableOpacity style={styles.headerButton} onPress={onClose}>
               <X size={20} color="#6B7280" />
@@ -539,8 +536,6 @@ export default function AIChatScreen({ onClose, onMinimize }: AIChatScreenProps 
           )}
         </View>
       </View>
-
-      {/* Messages */}
       <ScrollView
         ref={scrollViewRef}
         style={styles.messagesContainer}

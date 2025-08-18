@@ -221,11 +221,8 @@ export default function FloatingChatButton() {
           animationType="slide"
           presentationStyle="fullScreen"
           onRequestClose={handleClose}
-          statusBarTranslucent={true}
         >
-          <SafeAreaView style={styles.modalContainer}>
-            <AIChatScreen onClose={handleClose} onMinimize={handleMinimize} />
-          </SafeAreaView>
+          <AIChatScreen onClose={handleClose} onMinimize={handleMinimize} />
         </Modal>
       )}
     </>
